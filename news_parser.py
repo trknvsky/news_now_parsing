@@ -13,21 +13,22 @@ class NewsParser:
         response = requests.get(url)
         contents = response.text
         soup = BeautifulSoup(contents, 'lxml')
-        news = soup.find_all('div', {'class': 'boxes_cols'})
+        news = soup.find_all('main', {'class': 'rs-grid__main js-maincontent'})
         news_data = []
-        for one_news in news:      
-            news_attributes = one_news.find_all('div', {'class': 'hl__inner'})
+        for one_news in news:
+            news_attributes = one_news.select('div[class=hl]')
             for attribute in news_attributes:
-                news_dict = {}
-                news_maker = attribute.find('span', {'class': 'src-part'}).contents[0]
+                news_dict = {}               
                 title = attribute.find('a', {'class': 'hll'})
+                news_maker = attribute.find('span', {'class': 'src-part'})
+                count += 1
+                news_url = attribute.select('a[href]')[0]
                 news_dict['title'] = title.text
-                news_dict['url'] = attribute.contents[0].get('href')
-                news_dict['news maker'] = news_maker
+                news_dict['url'] = news_url.get('href')
+                news_dict['news maker'] = news_maker.text
                 if news_dict not in news_data:
                     news_data.append(news_dict)
-        return(news_data)
-
+        return news_data
 
 
 def main():
