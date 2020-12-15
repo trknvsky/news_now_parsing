@@ -21,7 +21,6 @@ class NewsParser:
                 news_dict = {}               
                 title = attribute.find('a', {'class': 'hll'})
                 news_maker = attribute.find('span', {'class': 'src-part'})
-                count += 1
                 news_url = attribute.select('a[href]')[0]
                 news_dict['title'] = title.text
                 news_dict['url'] = news_url.get('href')
